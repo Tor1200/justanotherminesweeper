@@ -197,7 +197,7 @@ int main(){
     }
 
 
-    //Free the memory and end ncurses
+    //end ncurses
     if(colCheck){
         attroff(COLOR_PAIR(1));
     }
