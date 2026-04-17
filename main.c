@@ -75,7 +75,7 @@ int main(){
         int currx = 0, curry = 0;
         int slotsRemaining = SIZEX * SIZEY;
         bool escape = false;
-        bool state = false;
+        bool state = true;
         char a;
         if(colCheck){
             attroff(COLOR_PAIR(1));
@@ -106,6 +106,7 @@ int main(){
                     }
                     if(word[curry][currx / 2] == '*'){
                         escape = true;
+                        state = false;
                     }
                     visibilityGrid[curry][currx / 2] = ' ';
                     slotsRemaining--;
@@ -156,13 +157,13 @@ int main(){
                     break;
                 case 'q':
                     escape = true;
+                    state = false;
                     break;
                 default:
                     break;
             }
-            if(slotsRemaining == MINE_COUNT){
+            if(slotsRemaining == MINE_COUNT && state != false){
                 escape = true;
-                state = true;
             }
             if(escape){
                 for(int i = 0; i < SIZEY; i++){
@@ -197,7 +198,7 @@ int main(){
     }
 
 
-    //end ncurses
+    //Free the memory and end ncurses
     if(colCheck){
         attroff(COLOR_PAIR(1));
     }
