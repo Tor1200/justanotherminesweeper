@@ -73,7 +73,7 @@ int main(){
         }
 
         int currx = 0, curry = 0;
-        int slotsRemaining = SIZEX * SIZEY;
+        int slotsRemaining = SIZEX * SIZEY - MINE_COUNT;
         bool escape = false;
         bool state = true;
         char a;
@@ -101,7 +101,7 @@ int main(){
                     if(curry != SIZEY - 1) curry++;
                     break;
                 case 'z':
-                    if(visibilityGrid[curry][currx / 2] == ' ' || visibilityGrid[curry][currx / 2] == '>' || visibilityGrid[curry][currx / 2] == '?'){
+                    if(visibilityGrid[curry][currx / 2] != '#'){
                         break;
                     }
                     if(word[curry][currx / 2] == '*'){
@@ -111,48 +111,53 @@ int main(){
                     visibilityGrid[curry][currx / 2] = ' ';
                     slotsRemaining--;
                     if(word[curry][currx / 2] == '0'){
-                        if(curry != 0 && currx / 2 != SIZEX - 1 && visibilityGrid[curry - 1][currx / 2 + 1] != ' '){
+                        if(curry != 0 && currx / 2 != SIZEX - 1 && visibilityGrid[curry - 1][currx / 2 + 1] == '#'){
                             visibilityGrid[curry - 1][currx / 2 + 1] = ' ';
                             slotsRemaining--;
                         }
-                        if(currx / 2 != SIZEX - 1 && visibilityGrid[curry][currx / 2 + 1] != ' '){
+                        if(currx / 2 != SIZEX - 1 && visibilityGrid[curry][currx / 2 + 1] == '#'){
                             visibilityGrid[curry][currx / 2 + 1] = ' ';
                             slotsRemaining--;
                         }
-                        if(curry != SIZEY - 1 && currx / 2 != SIZEX - 1 && visibilityGrid[curry + 1][currx / 2 + 1] != ' '){
+                        if(curry != SIZEY - 1 && currx / 2 != SIZEX - 1 && visibilityGrid[curry + 1][currx / 2 + 1] == '#'){
                             visibilityGrid[curry + 1][currx / 2 + 1] = ' ';
                             slotsRemaining--;
                         }
-                        if(curry != 0 && visibilityGrid[curry - 1][currx / 2] != ' '){
+                        if(curry != 0 && visibilityGrid[curry - 1][currx / 2] == '#'){
                             visibilityGrid[curry - 1][currx / 2] = ' ';
                             slotsRemaining--;
                         }
-                        if(curry != SIZEY - 1 && visibilityGrid[curry + 1][currx / 2] != ' '){
+                        if(curry != SIZEY - 1 && visibilityGrid[curry + 1][currx / 2] == '#'){
                             visibilityGrid[curry + 1][currx / 2] = ' ';
                             slotsRemaining--;
                         }
-                        if(curry != 0 && currx / 2 != 0 && visibilityGrid[curry - 1][currx / 2 - 1] != ' '){
+                        if(curry != 0 && currx / 2 != 0 && visibilityGrid[curry - 1][currx / 2 - 1] == '#'){
                             visibilityGrid[curry - 1][currx / 2 - 1] = ' ';
                             slotsRemaining--;
                         }
-                        if(currx / 2 != 0 && visibilityGrid[curry][currx / 2 - 1] != ' '){
+                        if(currx / 2 != 0 && visibilityGrid[curry][currx / 2 - 1] == '#'){
                             visibilityGrid[curry][currx / 2 - 1] = ' ';
                             slotsRemaining--;
                         }
-                        if(curry != SIZEY - 1 && currx / 2 != 0 && visibilityGrid[curry + 1][currx / 2 - 1] != ' '){
+                        if(curry != SIZEY - 1 && currx / 2 != 0 && visibilityGrid[curry + 1][currx / 2 - 1] == '#'){
                             visibilityGrid[curry + 1][currx / 2 - 1] = ' ';
                             slotsRemaining--;
                         }
                     }
                     break;
                 case 'x':
-                    if(visibilityGrid[curry][currx / 2] == ' ') break;
-                    if(visibilityGrid[curry][currx / 2] == '#'){
-                        visibilityGrid[curry][currx / 2] = '>';
-                    }else if(visibilityGrid[curry][currx / 2] == '>'){
-                        visibilityGrid[curry][currx / 2] = '?';
-                    }else{
-                        visibilityGrid[curry][currx / 2] = '#';
+                    if(visibilityGrid[curry][currx / 2] != ' '){
+                        switch(visibilityGrid[curry][currx / 2]){
+                            case '#':
+                                visibilityGrid[curry][currx / 2] = '>';
+                                break;
+                            case '>':
+                                visibilityGrid[curry][currx / 2] = '?';
+                                break;
+                            default:
+                                visibilityGrid[curry][currx / 2] = '#';
+                                break;
+                        }
                     }
                     break;
                 case 'q':
@@ -162,7 +167,7 @@ int main(){
                 default:
                     break;
             }
-            if(slotsRemaining == MINE_COUNT && state != false){
+            if(!slotsRemaining && state != false){
                 escape = true;
             }
             if(escape){
@@ -197,8 +202,7 @@ int main(){
         }
     }
 
-
-    //Free the memory and end ncurses
+    //End ncurses
     if(colCheck){
         attroff(COLOR_PAIR(1));
     }
