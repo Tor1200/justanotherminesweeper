@@ -1,4 +1,3 @@
-#include <stdint.h>
 #ifdef _WIN32
 #include <ncursesw/ncurses.h>
 #else
@@ -80,17 +79,29 @@ int main(){
         for(;;){
             //Print the game
             printGrid(word, visibilityGrid, &sizex, &sizey);
-            printw("\nControls:\nMove: [Arrow keys]\nOpen: [Z]\nMark: [X]\nQuit: [Q]\n\nDifficulty:\nEasy: [1]\nMedium: [2]\nHard: [3]");
+            printw("\nControls:\nMove: [Arrow keys]\nOpen: [Z]\nMark: [X]\nQuit: [Q]\n\nDifficulty:\nEasy: [1]\nMedium: [2]\nHard: [3]\n%d", input);
             move(curry, currx);
             //Process user input
             input = getch();
             if(input == 'q' || input == '1' || input == '2' || input == '3'){
                 escape = true;
                 state = false;
-            }else if(!slotsRemaining){
-                escape = true;
             }else{
                 switch (input) {
+                    #ifdef _WIN32
+                    case (char)75:
+                        if(currx != 0) currx-= 2;
+                        break;
+                    case (char)77:
+                        if(currx != (sizex - 1) * 2) currx+= 2;
+                        break;
+                    case (char)72:
+                        if(curry != 0) curry--;
+                        break;
+                    case (char)80:
+                        if(curry != sizey - 1) curry++;
+                        break;
+                    #else
                     case (char)68:
                         if(currx != 0) currx-= 2;
                         break;
@@ -103,6 +114,7 @@ int main(){
                     case (char)66:
                         if(curry != sizey - 1) curry++;
                         break;
+                    #endif
                     case 'z':
                         if(visibilityGrid[curry][currx / 2] != '#') break; //If the block is already unlocked, exit (Prevents incorrect decrease of slotsRemaining)
                         if(word[curry][currx / 2] == '*'){
@@ -166,6 +178,9 @@ int main(){
                     default:
                         break;
                 }
+            }
+            if(!slotsRemaining && state != false){
+                escape = true;
             }
             if(escape){
                 //Reveal every block
