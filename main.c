@@ -79,7 +79,7 @@ int main(){
         for(;;){
             //Print the game
             printGrid(word, visibilityGrid, &sizex, &sizey);
-            printw("\nControls:\nMove: [Arrow keys]\nOpen: [Z]\nMark: [X]\nQuit: [Q]\n\nDifficulty:\nEasy: [1]\nMedium: [2]\nHard: [3]\n%d", input);
+            printw("\nControls:\nMove: [Arrow keys]\nOpen: [Z]\nMark: [X]\nQuit: [Q]\n\nDifficulty:\nEasy: [1]\nMedium: [2]\nHard: [3]");
             move(curry, currx);
             //Process user input
             input = getch();
