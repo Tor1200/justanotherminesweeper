@@ -40,12 +40,12 @@ int main(){
     int sizex = 8, sizey = 8, mine_count = 10; //The grid's X, Y and bomb count
     while(input == 'z'){
         //Allocate the grid in memory
-        word = calloc(sizey, 8);
-        visibilityGrid = calloc(sizey, 8);
+        word = malloc(sizey * 8);
+        visibilityGrid = malloc(sizey * 8);
         assert(word != NULL && visibilityGrid != NULL);
         for(int i = 0; i < sizey; i++){
-            word[i] = calloc(sizex, 1);
-            visibilityGrid[i] = calloc(sizex, 1);
+            word[i] = malloc(sizex + 1);
+            visibilityGrid[i] = malloc(sizex + 1);
             assert(word[i] != NULL && visibilityGrid[i] != NULL);
             for(int k = 0; k < sizex; k++){
                 word[i][k] = '0';
@@ -197,6 +197,13 @@ int main(){
                 printGrid(word, visibilityGrid, &sizex, &sizey);
                 !state ? printw("\nYou Lost") : printw("\nYou Win");
                 printw(". Press Z to start a new game.\nPress any other key to quit.");
+                //Free the board
+                for(int i = 0; i < sizey; i++){
+                    free(word[i]);
+                    free(visibilityGrid[i]);
+                }
+                free(word);
+                free(visibilityGrid);
                 //Set the difficulty
                 switch(input){
                     case '1':
@@ -216,13 +223,6 @@ int main(){
                         break;
                 }
                 input = getch();
-                //Free the board
-                for(int i = 0; i < sizey; i++){
-                    free(word[i]);
-                    free(visibilityGrid[i]);
-                }
-                free(word);
-                free(visibilityGrid);
                 break;
             }
         }
