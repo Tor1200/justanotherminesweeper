@@ -5,6 +5,7 @@
 #endif
 #include <stdlib.h>
 #include <time.h>
+#include <assert.h>
 #include <stdbool.h>
 
 void printGrid(char **grid, char **truth, int *sizex, int *sizey){
@@ -41,9 +42,11 @@ int main(){
         //Allocate the grid in memory
         word = calloc(sizey, 8);
         visibilityGrid = calloc(sizey, 8);
+        assert(word != NULL && visibilityGrid != NULL);
         for(int i = 0; i < sizey; i++){
             word[i] = calloc(sizex, 1);
             visibilityGrid[i] = calloc(sizex, 1);
+            assert(word[i] != NULL && visibilityGrid[i] != NULL);
             for(int k = 0; k < sizex; k++){
                 word[i][k] = '0';
                 visibilityGrid[i][k] = '#';
@@ -179,7 +182,7 @@ int main(){
                         break;
                 }
             }
-            if(!slotsRemaining && state != false){
+            if(!slotsRemaining && state){
                 escape = true;
             }
             if(escape){
@@ -214,6 +217,10 @@ int main(){
                 }
                 input = getch();
                 //Free the board
+                for(int i = 0; i < sizey; i++){
+                    free(word[i]);
+                    free(visibilityGrid[i]);
+                }
                 free(word);
                 free(visibilityGrid);
                 break;
